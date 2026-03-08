@@ -52,7 +52,10 @@ class ChatBot:
                 message = Transaction.from_dict(json.loads(data))
                 if message.mtype == 0:
                     sender = self.users[message.sender]
-                    content = self.encryption.decrypt(message.content)
+                    plaintext = json.loads(self.encryption.decrypt(message.content))
+                    if plaintext["oid"] != 1:
+                        continue
+                    content = plaintext["content"]
                     quote = f"{sender.username} the {sender.privilege.name}: {content}"
                     self.messages.append({"role": "user", "content": quote})
                     if "@ai" in content:
@@ -67,7 +70,9 @@ class ChatBot:
                         await websocket.send(
                             json.dumps(
                                 {
-                                    "content": self.encryption.encrypt(response),
+                                    "content": self.encryption.encrypt(
+                                        json.dumps({"content": response, "oid": 1})
+                                    ),
                                     "mtype": 0,
                                 }
                             )
