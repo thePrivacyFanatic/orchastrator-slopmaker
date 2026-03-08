@@ -1,0 +1,18 @@
+services:
+  ollama-orchestrator-client:
+    build: .
+    depends_on:
+      - ollama
+    networks:
+      - internal
+      - default
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge
