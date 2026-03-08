@@ -47,7 +47,7 @@ class ChatBot:
                 json.dumps(self.creds.fromkeys(["username", "password"]))
             )
             assert websocket.recv() == "goahead"
-
+            await websocket.send("0")
             async for data in websocket:
                 message = Transaction.from_dict(json.loads(data))
                 if message.mtype == 0:
