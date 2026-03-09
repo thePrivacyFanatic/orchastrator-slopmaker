@@ -10,6 +10,7 @@ from ollama import chat
 
 from aes import AESGCM
 from classes import Transaction, Privilege, User
+import asyncio
 
 
 class ChatBot:
@@ -27,7 +28,7 @@ class ChatBot:
         self.creds = dotenv.dotenv_values()
         if not all(
             cred in self.creds
-            for cred in ["url", "gid", "username", "password", "AES_KEY"]
+            for cred in ["URL", "GID", "USERNAME", "PASSWORD", "AES_KEY"]
         ):
             raise ValueError("Missing required credentials in .env file")
         self.messages = deque(maxlen=50)
@@ -42,9 +43,9 @@ class ChatBot:
         :param creds: dictionary for connection credentials for the orchastrator instance
         :type creds: dict
         """
-        async with connect(f"{self.creds['url']}/{self.creds['gid']}") as websocket:  # type: ignore
+        async with connect(f"{self.creds['URL']}/{self.creds['GID']}") as websocket:  # type: ignore
             await websocket.send(
-                json.dumps(self.creds.fromkeys(["username", "password"]))
+                json.dumps(self.creds.fromkeys(["USERNAME", "PASSWORD"]))
             )
             assert websocket.recv() == "goahead"
             await websocket.send("0")
@@ -92,3 +93,14 @@ class ChatBot:
                             self.users[action["uid"]].privilege = Privilege(
                                 action["new"]
                             )
+
+
+def main() -> None:
+    """main function to start the chatbot"""
+    bot = ChatBot()
+
+    # asyncio.run(bot.start())
+
+
+if __name__ == "__main__":
+    main()
