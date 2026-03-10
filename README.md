@@ -3,6 +3,7 @@
 ### i never asked for this...
 
 this project was only made to comply with some dumb project requirement to "hAvE aI iNtEgRaTeD iN tHe PrOjEcT" though i'm pretty happy with what i could come up with, the alternative was to add a connection to an llm from the end-to-end encrypted client which is every bit as horrible as it sounds.
+idk what will happen with this, i will probably turn this into a bot making toolkit or smthn 
 
 ## running
 to run simply execute 

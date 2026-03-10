@@ -1,18 +1,32 @@
 services:
-  ollama-orchestrator-client:
+  orchestrator-slopmaker:
+    container_name: orchestrator-slopmaker
     build: .
     depends_on:
-      - ollama
+      ollama:
+        condition: service_healthy
     networks:
       - internal
-      - default
+
   ollama:
+    container_name: ollama
     image: ollama/ollama:latest
-    ports:
-      - "11434:11434"
     networks:
       - internal
+    volumes:
+      - ollama-data:/root/.ollama
+    tty: true
+    environment:
+      MODEL: ${MODEL-smollm2}
+    healthcheck:
+      test: ollama show $${MODEL}
+      interval: 60s
+      start_period: 5s
 
 networks:
   internal:
     driver: bridge
+
+volumes:
+  ollama-data:
+    driver: local
